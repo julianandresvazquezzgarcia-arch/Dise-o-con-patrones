@@ -1,21 +1,47 @@
+import java.util.Scanner;
+
 public class Main {
     public static void main(String[] args) {
 
-        Vehiculo v1 = VehiculoFactory.crearVehiculo("auto");
-        v1.placa = "ABC123";
+        Scanner sc = new Scanner(System.in);
 
-        Vehiculo v2 = VehiculoFactory.crearVehiculo("van");
-        v2.placa = "XYZ789";
+        System.out.print("Ingrese tipo de vehiculo (auto, van, camion): ");
+        String tipo = sc.nextLine();
 
-        v1.mostrarInfo();
-        v2.mostrarInfo();
+        Vehiculo v = VehiculoFactory.crearVehiculo(tipo);
 
-        Contrato c = new ContratoBuilder()
-                .setCliente("Juan")
-                .setVehiculo("Auto")
-                .agregarGPS()
-                .build();
+        if (v == null) {
+            System.out.println("Tipo de vehiculo no valido");
+            return;
+        }
 
-        System.out.println("Contrato de: " + c.cliente);
+        System.out.print("Ingrese placa: ");
+        String placa = sc.nextLine();
+        v.placa = placa;
+
+        v.mostrarInfo();
+
+        System.out.print("Ingrese nombre del cliente: ");
+        String cliente = sc.nextLine();
+
+        System.out.print("¿Desea GPS? (si/no): ");
+        String gpsInput = sc.nextLine();
+
+        ContratoBuilder builder = new ContratoBuilder()
+                .setCliente(cliente)
+                .setVehiculo(tipo);
+
+        if (gpsInput.equalsIgnoreCase("si")) {
+            builder.agregarGPS();
+        }
+
+        Contrato contrato = builder.build();
+
+        System.out.println("\n--- CONTRATO ---");
+        System.out.println("Cliente: " + contrato.cliente);
+        System.out.println("Vehiculo: " + contrato.vehiculo);
+        System.out.println("GPS: " + (contrato.gps ? "Si" : "No"));
+
+        sc.close();
     }
 }
